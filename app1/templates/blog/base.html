@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-hant">
+<head>
+    <meta charset="UTF-8">
+    <link href="{%static 'css/blog.css'%}" rel="stylesheet">
+    {% block title %}
+    
+    {% endblock %}
+</head>
+<body>
+
+    <div id = "sidebar">
+        我的讀書坊
+    </div>
+ <div id ="content">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+{% block title %}
+    藏經閣
+{% endblock %}
+ {% block content %}
+     <ul>
+     {% for post in posts   %}
+         <li><a href="{{post.get_url  }}">{{ post.title }}</a></li>
+         {{ post.body|truncatewords_html:10|linebreaks }}
+     {% endfor %}
+     </ul>
+     {% include 'pagination.html' with page=posts %}
+{% endblock %}

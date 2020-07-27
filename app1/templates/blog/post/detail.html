@@ -1,0 +1,37 @@
+{% extends "blog/base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+ <h1>{{ post.title }}</h1>
+  <p class="date">
+    Published {{ post.publish }} by {{ post.author }}
+  </p>
+  {{ post.body|linebreaks }}
+
+    {% with chapters.count as total_chapters  %}
+         {{ total_chapters}} chapter{{ total_chapters|pluralize }} 被紀錄
+    <h2>
+    {% endwith %}
+
+      {% for chapter in chapters %}
+        <div class="comment">
+            <p class="info">Comment {{ forloop.counter }} by {{ chapter.name }} {{ chapter.created }}</p>
+            {{ chapter.body|linebreaks }}
+
+        </div>
+        {% empty %}
+    {% endfor %}
+
+     {% if new_chapter %}
+        <h2>you comment has been added.</h2>
+    {% else %}
+        <form method="post" >
+            {{ chapter_form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="Add Comment"></p>
+
+        </form>
+    {% endif %}
+      <h2></h2>
+{% endblock %}
