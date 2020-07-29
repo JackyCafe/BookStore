@@ -46,6 +46,7 @@ class Chapter(models.Model):
     name = models.CharField(max_length=80)
     chapter = models.CharField(max_length=80)
     body = models.TextField()
+    attachment = models.ImageField(upload_to='images/',blank=True,null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -56,5 +57,6 @@ class Chapter(models.Model):
     def __str__(self):
         return f'Comment by {self.name} on {self.post}'
 
-
-
+    def delete(self, *args,**kwargs):
+        self.attachment.delete()
+        super().delete(*args,**kwargs)

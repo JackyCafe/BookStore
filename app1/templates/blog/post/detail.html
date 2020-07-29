@@ -13,20 +13,42 @@
          {{ total_chapters}} chapter{{ total_chapters|pluralize }} 被紀錄
     <h2>
     {% endwith %}
-
+      <table>
+          <thead><tr>
+              <th></th>
+              <th>內容</th>
+              <th>縮圖</th>
+              <th> </th>
+              <th> </th>
+          </tr></thead>
       {% for chapter in chapters %}
-        <div class="comment">
-            <p class="info">Comment {{ forloop.counter }} by {{ chapter.name }} {{ chapter.created }}</p>
-            {{ chapter.body|linebreaks }}
 
-        </div>
+
+            <tr>
+            <td>{{ chapter.id }}</td>
+            <td>
+            {{ chapter.body|linebreaks }}</td>
+            <td>{% if chapter.attachment.url is not null %}
+                <img src="{{ chapter.attachment.url }}" style="height: 100px;width: 100px"/></td>
+
+                {% endif %}
+            <td><form method="post" action="{% url 'app1:delete' chapter.id %}">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form></td>
+
+             <td class="info">Comment {{ forloop.counter }} by {{ chapter.name }} {{ chapter.created }}</td>
+            </tr>
+
         {% empty %}
     {% endfor %}
-
+    </table>
      {% if new_chapter %}
-        <h2>you comment has been added.</h2>
+        <form method="get">
+            <input type="submit" value="新增"/>
+        </form>
     {% else %}
-        <form method="post" >
+        <form method="post" enctype="multipart/form-data">
             {{ chapter_form.as_p }}
             {% csrf_token %}
             <p><input type="submit" value="Add Comment"></p>

@@ -5,5 +5,5 @@ from .models import Chapter
 class ChapterForm(forms.ModelForm):
     class Meta:
         model = Chapter
-        fields = '__all__'
+        fields = ['name','chapter','body','attachment']
 
