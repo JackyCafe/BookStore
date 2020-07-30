@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
+from ckeditor.fields import RichTextField
 
 
 class PublishedManage(models.Manager):
@@ -12,14 +13,15 @@ class PublishedManage(models.Manager):
 
 
 # Create your models here.
-class Post(models.Model):
+class Books(models.Model):
     STATUS_CHOICE = (('draft', 'Draft'),
                      ('published', 'Published')
                      )
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
-    body = models.TextField()
+    author = models.CharField(max_length=20)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
+    body = RichTextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -42,10 +44,10 @@ class Post(models.Model):
 
 
 class Chapter(models.Model):
-    post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='chapter')
-    name = models.CharField(max_length=80)
+    book = models.ForeignKey(Books,on_delete=models.CASCADE,related_name='chapter')
+    slug = models.SlugField(max_length=250, unique_for_date='created')
     chapter = models.CharField(max_length=80)
-    body = models.TextField()
+    body = RichTextField()
     attachment = models.ImageField(upload_to='images/',blank=True,null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -55,7 +57,7 @@ class Chapter(models.Model):
         ordering = ('-created',)
 
     def __str__(self):
-        return f'Comment by {self.name} on {self.post}'
+        return f'Comment by {self.slug} on {self.book}'
 
     def delete(self, *args,**kwargs):
         self.attachment.delete()

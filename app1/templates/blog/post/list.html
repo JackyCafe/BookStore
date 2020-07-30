@@ -6,7 +6,7 @@
      <ul>
      {% for post in posts   %}
          <li><a href="{{post.get_url  }}">{{ post.title }}</a></li>
-         {{ post.body|truncatewords_html:10|linebreaks }}
+         {{ post.body|safe|truncatewords_html:10|linebreaks }}
      {% endfor %}
      </ul>
      {% include 'pagination.html' with page=posts %}

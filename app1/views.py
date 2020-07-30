@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 from app1.forms import ChapterForm
-from app1.models import Post, Chapter
+from app1.models import Books, Chapter
 
 
 def index(request):
@@ -12,7 +12,7 @@ def index(request):
 
 
 def list(request):
-    object_list = Post.objects.all()
+    object_list = Books.objects.all()
     paginator = Paginator(object_list, 3)
     page = request.GET.get('page')
 
@@ -27,21 +27,21 @@ def list(request):
 
 
 def book_detail(request, year, month, day, post):
-    post = get_object_or_404(Post, slug=post,
+    books = get_object_or_404(Books, slug=post,
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
 
-    return render(request, 'blog/post/detail.html', {'post': post})
+    return render(request, 'blog/post/detail.html', {'books': books})
 
 
 def chapter_detail(request, year, month, day, post):
-    post = get_object_or_404(Post, slug=post,
+    books = get_object_or_404(Books, slug=post,
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
 
-    chapters = post.chapter.filter(active=True)
+    chapters = books.chapter.filter(active=True)
     new_chapter: Chapter
     new_chapter = None
     chapter_form: ChapterForm
@@ -50,22 +50,40 @@ def chapter_detail(request, year, month, day, post):
         chapter_form = ChapterForm(request.POST, request.FILES)
         if chapter_form.is_valid():
             new_chapter = chapter_form.save(commit=False)
-            new_chapter.post = post
+            new_chapter.book = books
             new_chapter.save()
     else:
         chapter_form = ChapterForm()
 
-    return render(request, 'blog/post/detail.html', {'post': post,
+    return render(request, 'blog/post/detail.html', {'books': books,
                                                      'chapters': chapters,
                                                      'new_chapter': new_chapter,
                                                      'chapter_form': chapter_form})
+
+
+def chapter_edit(request,id):
+    chapter = get_object_or_404(Chapter,id = id)
+    chapter_form = ChapterForm(request.POST,instance=chapter)
+    if chapter_form.is_valid():
+        post = chapter_form.save(commit=True)
+        post.save()
+        chapters = Chapter.objects.all()
+        return redirect(reverse('app1:book_detail',args=[chapter.book.publish.year,
+                             chapter.book.publish.month,
+                             chapter.book.publish.day,
+                             chapter.book.slug]))
+    else:
+         chapter_form = ChapterForm(instance=chapter)
+         context = {'chapter':chapter,'chapter_form':chapter_form}
+
+    return render(request,'blog/post/edit_chapter.html',context)
 
 
 def delete(request,id):
     if request.method == 'POST':
         chapter = get_object_or_404(Chapter,id = id)
         chapter.delete()
-    return redirect(reverse('app1:book_detail',args=[chapter.post.publish.year,
-                             chapter.post.publish.month,
-                             chapter.post.publish.day,
-                             chapter.post.slug]))
+    return redirect(reverse('app1:book_detail',args=[chapter.book.publish.year,
+                             chapter.book.publish.month,
+                             chapter.book.publish.day,
+                             chapter.book.slug]))

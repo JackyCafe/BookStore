@@ -1,19 +1,27 @@
 {% extends "blog/base.html" %}
+ {% load static %}
+  <!-- Bootstrap CSS -->
 
-{% block title %}{{ post.title }}{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1  , shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+{% block title %}{{ books.title }}{% endblock %}
 
 {% block content %}
- <h1>{{ post.title }}</h1>
+ <h1>{{ books.title }}</h1>
   <p class="date">
-    Published {{ post.publish }} by {{ post.author }}
+    Published {{ books.publish }} by {{ books.author }}
   </p>
-  {{ post.body|linebreaks }}
+  {{ books.body|safe|linebreaks }}
 
     {% with chapters.count as total_chapters  %}
          {{ total_chapters}} chapter{{ total_chapters|pluralize }} 被紀錄
     <h2>
     {% endwith %}
-      <table>
+      <table class="table">
           <thead><tr>
               <th></th>
               <th>內容</th>
@@ -22,20 +30,24 @@
               <th> </th>
           </tr></thead>
       {% for chapter in chapters %}
-
-
             <tr>
             <td>{{ chapter.id }}</td>
             <td>
-            {{ chapter.body|linebreaks }}</td>
-            <td>{% if chapter.attachment.url is not null %}
+            {{ chapter.body|safe|linebreaks }}</td>
+            <td>{% if chapter.attachment  %}
                 <img src="{{ chapter.attachment.url }}" style="height: 100px;width: 100px"/></td>
 
                 {% endif %}
             <td><form method="post" action="{% url 'app1:delete' chapter.id %}">
                 {% csrf_token %}
                 <button type="submit">Delete</button>
-            </form></td>
+            </form>
+            <form method="post" action="{% url 'app1:chapter_edit' chapter.id %}">
+                {% csrf_token %}
+                <button type="submit">Edit</button>
+            </form>
+
+            </td>
 
              <td class="info">Comment {{ forloop.counter }} by {{ chapter.name }} {{ chapter.created }}</td>
             </tr>
@@ -43,17 +55,36 @@
         {% empty %}
     {% endfor %}
     </table>
-     {% if new_chapter %}
-        <form method="get">
-            <input type="submit" value="新增"/>
-        </form>
-    {% else %}
+    <!--新增 -->
+<div class="container">
+
         <form method="post" enctype="multipart/form-data">
-            {{ chapter_form.as_p }}
-            {% csrf_token %}
+          <div class="form-group">
+                <label for=" chapter">Chapter</label>
+                {{ chapter_form.chapter }}
+          </div>
+          <div class="form-group">
+                <label for="slug">Slug</label>
+                {{ chapter_form.slug }}
+          </div>
+
+
+
+          <div class="form-group">
+                <label for="id_body">body</label>
+               {{ chapter_form.media }}
+                {{ chapter_form.body }}
+          </div>
+              <div class="form-group">
+                <label for="attachment">attachment</label>
+                {{ chapter_form.attachment }}
+          </div>
+
+             {% csrf_token %}
             <p><input type="submit" value="Add Comment"></p>
 
         </form>
-    {% endif %}
+</div>
+
       <h2></h2>
 {% endblock %}

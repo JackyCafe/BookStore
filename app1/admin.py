@@ -1,10 +1,10 @@
 from django.contrib import admin
-from app1.models import Post,Chapter
+from app1.models import Books,Chapter
 
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display =  [field.name for field in Post._meta.fields]
+@admin.register(Books)
+class BooksAdmin(admin.ModelAdmin):
+    list_display =  [field.name for field in Books._meta.fields]
 
 
 @admin.register(Chapter)

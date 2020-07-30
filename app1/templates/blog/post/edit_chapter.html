@@ -1,0 +1,11 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+
+<form method="post" action="{% url 'app1:chapter_edit' chapter.id %}">
+    {% csrf_token %}
+    {{ chapter_form.as_p }}
+    {{ chapter_form.media }}
+    <input type="submit" value="修改">
+</form>
+{% endblock %}
