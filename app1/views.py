@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from app1.forms import ChapterForm
-from app1.models import Books, Chapter
+from app1.forms import ChapterForm, CommentForm
+from app1.models import Books, Chapter, Comment
 
 
 def index(request):
@@ -83,7 +83,7 @@ def chapter_edit(request,id):
                              chapter.book.publish.day,
                              chapter.book.slug]))
     else:
-         #chapter_form = ChapterForm(instance=chapter)
+         chapter_form = ChapterForm(instance=chapter)
          context = {'chapter':chapter,'chapter_form':chapter_form}
 
     return render(request,'blog/post/edit_chapter.html',context)
@@ -101,5 +101,24 @@ def delete(request,id):
                              chapter.book.slug]))
 
 
-def ch_detail(self, year, month, day, chapter):
-    return HttpResponse('媽 我在這裡')
+#chapetr 詳細說明
+def ch_detail(request, id, chapter):
+    chapter = get_object_or_404(Chapter, slug=chapter,id = id )
+    comments = chapter.comment.all()
+    return render(request,'blog/post/comment_list.html',{'chapter':chapter,'comments':comments})
+
+
+#我要補充
+def comment_add(request,id):
+    chapter = get_object_or_404(Chapter,id=id)
+    form = CommentForm(request.POST,request.FILES)
+    if request.method =='POST':
+        if form.is_valid():
+            comments: Comment
+            comments = form.save(commit = False)
+            comments.chapter = chapter
+            comments.save()
+            return redirect(reverse('app1:ch_detail',args=[id,chapter.slug]) )
+    else:
+        context = {'form':form}
+    return render(request,'blog/post/add_comment.html',context)

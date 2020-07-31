@@ -27,6 +27,6 @@ urlpatterns = [
      path('chapter/<int:id>',views.delete,name = 'delete'),
      path('chapter_edit/<int:id>', views.chapter_edit, name='chapter_edit'),
      path('<int:year>/<int:month>/<int:day>/<slug:post>/',views.chapter_detail  ,name = 'book_detail'),
-     path('<int:year>/<int:month>/<int:day>/<slug:chapter>/ch/', views.ch_detail, name='ch_detail'),
-
+     path('ch/<int:id>/<slug:chapter>/', views.ch_detail, name='ch_detail'),
+     path('comment_add/<int:id>/',views.comment_add,name='comment_add'),
 ]

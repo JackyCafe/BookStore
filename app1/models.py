@@ -47,6 +47,7 @@ class Chapter(models.Model):
     book = models.ForeignKey(Books,on_delete=models.CASCADE,related_name='chapter')
     slug = models.SlugField(max_length=250, unique_for_date='created')
     chapter = models.CharField(max_length=80)
+    chapter_name = models.CharField(max_length=80,default='')
     body = RichTextField()
     attachment = models.ImageField(upload_to='images/',blank=True,null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -57,7 +58,7 @@ class Chapter(models.Model):
         ordering = ('-created',)
 
     def __str__(self):
-        return f'Comment by {self.slug} on {self.book}'
+        return f' {self.chapter_name} 在 {self.book} 一書'
 
     def delete(self, *args,**kwargs):
         self.attachment.delete()
@@ -65,7 +66,21 @@ class Chapter(models.Model):
 
     def get_url(self):
         return reverse('app1:ch_detail',
-                       args=[self.created.year,
-                             self.created.month,
-                             self.created.day,
+                       args=[self.id,
                              self.slug])
+
+
+class Comment(models.Model):
+    chapter = models.ForeignKey(Chapter,on_delete=models.CASCADE,related_name='comment',null=True)
+    name = models.ForeignKey(User,on_delete=models.CASCADE,related_name='comment',null=True)
+    comment = RichTextField()
+    attachment = models.ImageField(upload_to='images/comment/', blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f' {self.name} 補充章節  {self.chapter}'
+
+    def delete(self, *args, **kwargs):
+        self.attachment.delete()
+        super().delete(*args, **kwargs)

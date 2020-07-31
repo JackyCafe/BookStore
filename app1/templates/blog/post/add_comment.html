@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+{% block title %}
+        補充說明
+{% endblock %}
+{% block content %}
+    <form method="post" enctype="multipart/form-data"
+          action="">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <input type="submit" value="補充"/>
+    </form>
+{% endblock %}

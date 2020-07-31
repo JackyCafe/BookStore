@@ -24,6 +24,7 @@
       <table class="table">
           <thead><tr>
               <th></th>
+              <th>主題</th>
               <th>內容</th>
               <th>縮圖</th>
               <th> </th>
@@ -31,7 +32,8 @@
           </tr></thead>
       {% for chapter in chapters %}
             <tr>
-                <td><a href = "ch/"{{ chapter.get_url }}>{{ chapter.id }}</a></td>
+                <td><a href = "{{ chapter.get_url }}">{{ chapter.id }}</a></td>
+             <td>{{ chapter.chapter_name }}</td>
             <td>
             {{ chapter.body|safe|linebreaks|truncatechars:60 }}</td>
             <td>{% if chapter.attachment  %}

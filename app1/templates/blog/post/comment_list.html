@@ -1,0 +1,19 @@
+{% extends 'blog/base.html' %}
+{% block title %}
+        回應
+{% endblock %}
+{% block content %}
+        <a href="{% url 'app1:comment_add' chapter.id %}">我要補充</a>
+
+        <p>{{ chapter.slug }}<hr>
+        <p>{{ chapter.body |safe }}
+            {% if chapter.attachment %}
+        <img src="{{ chapter.attachment.url }} " style="width: 50% ;height: 50%"></p>
+        {% endif %}
+
+        {% for comment in comments %}
+            {{ comment.comment|safe }}-{{ comment }}
+        {% endfor %}
+
+
+{% endblock %}
