@@ -23,10 +23,10 @@ from app1 import views
 app_name = 'app1'
 urlpatterns = [
      path('index/',views.index,name = 'index'),
-     path('list/',views.list,name = 'list'),
-     path('list/', views.list, name='list'),
+     path('books/',views.books,name = 'books'),
      path('chapter/<int:id>',views.delete,name = 'delete'),
      path('chapter_edit/<int:id>', views.chapter_edit, name='chapter_edit'),
-
      path('<int:year>/<int:month>/<int:day>/<slug:post>/',views.chapter_detail  ,name = 'book_detail'),
+     path('<int:year>/<int:month>/<int:day>/<slug:chapter>/ch/', views.ch_detail, name='ch_detail'),
+
 ]

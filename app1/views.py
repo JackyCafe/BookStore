@@ -11,7 +11,7 @@ def index(request):
     return HttpResponse('媽～我在這裡')
 
 
-def list(request):
+def books(request):
     object_list = Books.objects.all()
     paginator = Paginator(object_list, 3)
     page = request.GET.get('page')
@@ -26,6 +26,7 @@ def list(request):
     return render(request, 'blog/post/list.html', {'page': page, 'posts': posts})
 
 
+#由books中接收/year/month/day/slug 參數,
 def book_detail(request, year, month, day, post):
     books = get_object_or_404(Books, slug=post,
                              publish__year=year,
@@ -34,6 +35,10 @@ def book_detail(request, year, month, day, post):
 
     return render(request, 'blog/post/detail.html', {'books': books})
 
+
+
+#利用book.get_url 來呼叫
+# path('<int:year>/<int:month>/<int:day>/<slug:post>/',views.chapter_detail  ,name = 'book_detail'),
 
 def chapter_detail(request, year, month, day, post):
     books = get_object_or_404(Books, slug=post,
@@ -61,9 +66,14 @@ def chapter_detail(request, year, month, day, post):
                                                      'chapter_form': chapter_form})
 
 
+
+#在章節中，可對之前的文章進行編輯
+# 利用，
+#  1.request.FILES, 可從新換圖
+#  2. instance=chapter 可在編輯介面中帶出舊資料
 def chapter_edit(request,id):
     chapter = get_object_or_404(Chapter,id = id)
-    chapter_form = ChapterForm(request.POST,instance=chapter)
+    chapter_form = ChapterForm(request.POST,request.FILES,instance=chapter)
     if chapter_form.is_valid():
         post = chapter_form.save(commit=True)
         post.save()
@@ -73,12 +83,14 @@ def chapter_edit(request,id):
                              chapter.book.publish.day,
                              chapter.book.slug]))
     else:
-         chapter_form = ChapterForm(instance=chapter)
+         #chapter_form = ChapterForm(instance=chapter)
          context = {'chapter':chapter,'chapter_form':chapter_form}
 
     return render(request,'blog/post/edit_chapter.html',context)
 
 
+
+#刪除書本
 def delete(request,id):
     if request.method == 'POST':
         chapter = get_object_or_404(Chapter,id = id)
@@ -87,3 +99,7 @@ def delete(request,id):
                              chapter.book.publish.month,
                              chapter.book.publish.day,
                              chapter.book.slug]))
+
+
+def ch_detail(self, year, month, day, chapter):
+    return HttpResponse('媽 我在這裡')

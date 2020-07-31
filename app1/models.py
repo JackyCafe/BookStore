@@ -62,3 +62,10 @@ class Chapter(models.Model):
     def delete(self, *args,**kwargs):
         self.attachment.delete()
         super().delete(*args,**kwargs)
+
+    def get_url(self):
+        return reverse('app1:ch_detail',
+                       args=[self.created.year,
+                             self.created.month,
+                             self.created.day,
+                             self.slug])
