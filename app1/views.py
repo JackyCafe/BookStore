@@ -3,12 +3,28 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from app1.forms import ChapterForm, CommentForm
+from app1.forms import ChapterForm, CommentForm,BooksForm
 from app1.models import Books, Chapter, Comment
 
+ma = '媽～我在這裡'
 
 def index(request):
-    return HttpResponse('媽～我在這裡')
+    return HttpResponse(ma)
+
+def book_add(request):
+    book_form = BooksForm(request.POST)
+    book:Books
+    if book_form.is_valid():
+        book = book_form.save(commit=False)
+        book.owner = request.user
+        book.save()
+        return redirect(reverse('app1:books'))
+    else:
+        form = BooksForm()
+        context = {'form':form}
+
+    return render(request,'blog/post/add_books.html',context)
+
 
 
 def books(request):

@@ -1,5 +1,10 @@
 from django import forms
-from .models import Chapter,Comment
+from .models import Chapter,Comment,Books
+
+class BooksForm(forms.ModelForm):
+    class Meta:
+        model = Books
+        fields = ['title','slug','author','body']
 
 
 class ChapterForm(forms.ModelForm):
@@ -23,4 +28,4 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ['name','comment','attachment']
+        fields = ['name','comment','attachment','slug']

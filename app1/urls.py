@@ -24,6 +24,7 @@ app_name = 'app1'
 urlpatterns = [
      path('index/',views.index,name = 'index'),
      path('books/',views.books,name = 'books'),
+     path('books_add/', views.book_add, name='books_add'),
      path('chapter/<int:id>',views.delete,name = 'delete'),
      path('chapter_edit/<int:id>', views.chapter_edit, name='chapter_edit'),
      path('<int:year>/<int:month>/<int:day>/<slug:post>/',views.chapter_detail  ,name = 'book_detail'),
