@@ -47,8 +47,8 @@ class Chapter(models.Model):
     book = models.ForeignKey(Books,on_delete=models.CASCADE,related_name='chapter')
     slug = models.SlugField(max_length=250, unique_for_date='created')
     chapter = models.CharField(max_length=80)
-    chapter_name = models.CharField(max_length=80,default='')
-    body = RichTextField()
+    chapter_name = models.CharField(max_length=80,null=True)
+    body = RichTextField(null = True)
     attachment = models.ImageField(upload_to='images/',blank=True,null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -72,6 +72,7 @@ class Chapter(models.Model):
 
 class Comment(models.Model):
     chapter = models.ForeignKey(Chapter,on_delete=models.CASCADE,related_name='comment',null=True)
+    slug = models.SlugField(max_length=250, unique_for_date='created')
     name = models.ForeignKey(User,on_delete=models.CASCADE,related_name='comment',null=True)
     comment = RichTextField()
     attachment = models.ImageField(upload_to='images/comment/', blank=True, null=True)
@@ -84,3 +85,8 @@ class Comment(models.Model):
     def delete(self, *args, **kwargs):
         self.attachment.delete()
         super().delete(*args, **kwargs)
+
+    def get_url(self):
+        return reverse('app1:comment_edit',
+                       args=[self.id,
+                             self.slug])

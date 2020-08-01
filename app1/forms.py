@@ -11,7 +11,8 @@ class ChapterForm(forms.ModelForm):
 
     class Meta:
         model = Chapter
-        fields = ['slug','chapter_name','chapter','body','attachment']
+        #fields = '__all__'
+        fields = ['slug','chapter','chapter_name','body','attachment','active']
 
 
 class CommentForm(forms.ModelForm):

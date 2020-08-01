@@ -39,7 +39,6 @@ def book_detail(request, year, month, day, post):
 
 #利用book.get_url 來呼叫
 # path('<int:year>/<int:month>/<int:day>/<slug:post>/',views.chapter_detail  ,name = 'book_detail'),
-
 def chapter_detail(request, year, month, day, post):
     books = get_object_or_404(Books, slug=post,
                              publish__year=year,
@@ -47,12 +46,13 @@ def chapter_detail(request, year, month, day, post):
                              publish__day=day)
 
     chapters = books.chapter.filter(active=True)
+
     new_chapter: Chapter
     new_chapter = None
-    chapter_form: ChapterForm
     chapter: Chapter
     if request.method == 'POST':
         chapter_form = ChapterForm(request.POST, request.FILES)
+
         if chapter_form.is_valid():
             new_chapter = chapter_form.save(commit=False)
             new_chapter.book = books
@@ -122,3 +122,8 @@ def comment_add(request,id):
     else:
         context = {'form':form}
     return render(request,'blog/post/add_comment.html',context)
+
+
+#TODO  補充說明需要可以變更
+def comment_edit(request,id,comment):
+    return HttpResponse('媽~我在這裡')

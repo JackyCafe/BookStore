@@ -12,7 +12,11 @@
         {% endif %}
 
         {% for comment in comments %}
-            {{ comment.comment|safe }}-{{ comment }}
+            <hr><a href="{{ comment.get_url }}">
+            {{ comment.comment|safe }}-{{ comment }}</a>
+            {% if comment.attachment %}
+                <img src="{{ comment.attachment.url }}" style="width: 30%;height: 30%" >
+            {% endif %}
         {% endfor %}
 
 

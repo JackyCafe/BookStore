@@ -29,4 +29,5 @@ urlpatterns = [
      path('<int:year>/<int:month>/<int:day>/<slug:post>/',views.chapter_detail  ,name = 'book_detail'),
      path('ch/<int:id>/<slug:chapter>/', views.ch_detail, name='ch_detail'),
      path('comment_add/<int:id>/',views.comment_add,name='comment_add'),
+     path('comment_edit/<int:id>/<slug:comment>/', views.comment_edit, name='comment_edit'),
 ]
