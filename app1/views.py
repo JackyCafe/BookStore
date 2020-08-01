@@ -126,4 +126,14 @@ def comment_add(request,id):
 
 #TODO  補充說明需要可以變更
 def comment_edit(request,id,comment):
-    return HttpResponse('媽~我在這裡')
+    comments = get_object_or_404(Comment,id=id,slug=comment)
+    form = CommentForm(request.POST,request.FILES,instance=comments)
+    if form.is_valid():
+        comment = form.save(commit=True)
+        comment.save()
+       # return HttpResponse('爸! 我回來了'+comments.chapter.slug)
+        return redirect(reverse('app1:ch_detail', args=[id,comments.chapter.slug]))
+    else:
+        form = CommentForm(instance=comments)
+        context = {'comments':comments,'form':form}
+    return render(request,'blog/post/edit_comment.html',context)

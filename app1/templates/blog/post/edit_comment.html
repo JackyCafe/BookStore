@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+
+<form method="post" enctype="multipart/form-data"
+      action="{% url 'app1:comment_edit' comments.id comments.slug %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ form.media }}
+    <input type="submit" value="修改">
+</form>
+{% endblock %}
