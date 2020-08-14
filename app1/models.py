@@ -1,3 +1,6 @@
+from random import randint, randrange
+
+from autoslug import AutoSlugField
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -18,7 +21,10 @@ class Books(models.Model):
                      ('published', 'Published')
                      )
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique_for_date='publish')
+    #slug = models.SlugField(max_length=250, unique_for_date='publish')
+    slug = AutoSlugField(max_length=250,populate_from='title', unique_for_date='publish'
+                         ,editable=True,null=True,unique=True)
+
     author = models.CharField(max_length=20)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     body = RichTextField()
@@ -78,6 +84,8 @@ class Comment(models.Model):
     attachment = models.ImageField(upload_to='images/comment/', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+
 
     def __str__(self):
         return f' {self.name} 補充章節  {self.chapter}'

@@ -148,7 +148,7 @@ def comment_edit(request,id,comment):
         comment = form.save(commit=True)
         comment.save()
        # return HttpResponse('爸! 我回來了'+comments.chapter.slug)
-        return redirect(reverse('app1:ch_detail', args=[id,comments.chapter.slug]))
+        return redirect(reverse('app1:ch_detail', args=[comments.chapter.id,comments.chapter.slug]))
     else:
         form = CommentForm(instance=comments)
         context = {'comments':comments,'form':form}

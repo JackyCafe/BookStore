@@ -8,14 +8,14 @@
         <p>{{ chapter.slug }}<hr>
         <p>{{ chapter.body |safe }}
             {% if chapter.attachment %}
-        <img src="{{ chapter.attachment.url }} " style="width: 50% ;height: 50%"></p>
+        <img src="{{ chapter.attachment.url }} " style="width: 70% ;height: 70%"></p>
         {% endif %}
 
         {% for comment in comments %}
             <hr><a href="{{ comment.get_url }}">
             {{ comment.comment|safe }}-{{ comment }}</a>
             {% if comment.attachment %}
-                <img src="{{ comment.attachment.url }}" style="width: 30%;height: 30%" >
+                <img src="{{ comment.attachment.url }}" style="width: 70%;height: 70%" >
             {% endif %}
         {% endfor %}
 
